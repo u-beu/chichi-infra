@@ -1,0 +1,6 @@
+[submodule "chichi"]
+	path = chichi
+	url = https://github.com/u-beu/chichi.git
+[submodule "chichi-bot"]
+	path = chichi-bot
+	url = https://github.com/u-beu/chichi-bot.git
