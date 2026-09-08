@@ -1,5 +1,11 @@
 # chichi-infra Root Guidelines
 
+## Directory Structure
+chichi-project/
+├── chichi-infra/  <-- Root context for infra commands & compose
+├── chichi/        <-- Spring Boot source code (referenced via ../chichi)
+└── chichi-bot/    <-- Python Bot source code (referenced via ../chichi-bot)
+
 ## Overview
 Multi-container architecture managed by Docker Compose.
 External traffic routes via Cloudflare Tunnel through Nginx Reverse Proxy to internal services.
