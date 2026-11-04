@@ -3,11 +3,12 @@ services:
     image: mysql:8.0
     container_name: chichi-mysql
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PWD}
-      MYSQL_DATABASE: ${DB_NAME}
+    env_file:
+      - .env    
+    volumes:
+      - mysql_data:/var/lib/mysql
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_PWD}" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}" ]
       interval: 10s
       timeout: 2s
       retries: 2
@@ -15,7 +16,7 @@ services:
       - chichi-network
 
   redis:
-    image: redis:alpine
+    image: redis:7-alpine
     container_name: chichi-redis
     restart: always
     volumes:
@@ -29,8 +30,11 @@ services:
       - chichi-network
 
   chichi-site:
-    image: ${DOCKERHUB_USERNAME}/chichi-app:latest
+    build:
+      context: ./chichi
+      dockerfile: Dockerfile
     container_name: chichi-site
+    restart: always
     depends_on:
       mysql:
           condition: service_healthy
@@ -50,7 +54,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
     networks:
       - chichi-network
 
@@ -78,3 +83,4 @@ networks:
 
 volumes:
   redis_data:
+  mysql_data:
